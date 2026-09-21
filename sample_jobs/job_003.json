@@ -1,0 +1,22 @@
+{
+  "source": "sample",
+  "source_job_id": "job_003",
+  "title": "Evaluate hallucinations in proposal-generation prompts",
+  "description": "Design an evaluation set and test harness for an LLM proposal assistant. Detect unsupported claims about years of experience, certifications, past clients, and project results. Return structured evidence for every decision and document false-positive and false-negative tradeoffs.",
+  "budget_type": "fixed",
+  "budget_min": 900,
+  "budget_max": 1400,
+  "currency": "USD",
+  "required_skills": ["LLM evaluation", "Python", "Structured Outputs", "Prompt engineering", "Testing"],
+  "posted_at": "2026-09-18T08:15:00Z",
+  "source_url": "https://example.invalid/jobs/job_003",
+  "client": {
+    "source_client_id": "client_003",
+    "name": null,
+    "facts": [
+      {"type": "FACT", "claim": "The fixture asks for evidence-backed hallucination checks.", "source": "sample job description"},
+      {"type": "UNKNOWN", "claim": "The client's organization name is not provided.", "source": "sample fixture"}
+    ]
+  },
+  "raw_data": {"fixture_version": 1, "intentionally_synthetic": true}
+}

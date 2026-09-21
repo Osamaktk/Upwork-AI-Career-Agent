@@ -1,0 +1,22 @@
+{
+  "source": "sample",
+  "source_job_id": "job_001",
+  "title": "Build a FastAPI data-enrichment service",
+  "description": "Create an asynchronous FastAPI service that imports CSV files, validates rows, enriches records through a provider interface, and exports a reviewed result. Include PostgreSQL persistence, retries, audit events, and automated tests. Do not invent missing contact values.",
+  "budget_type": "fixed",
+  "budget_min": 1800,
+  "budget_max": 2600,
+  "currency": "USD",
+  "required_skills": ["Python", "FastAPI", "PostgreSQL", "SQLAlchemy", "pytest"],
+  "posted_at": "2026-09-15T10:00:00Z",
+  "source_url": "https://example.invalid/jobs/job_001",
+  "client": {
+    "source_client_id": "client_001",
+    "name": "Sample Analytics Studio",
+    "facts": [
+      {"type": "FACT", "claim": "The supplied fixture requests PostgreSQL and automated tests.", "source": "sample job description"},
+      {"type": "UNKNOWN", "claim": "Real hiring history is unavailable in sample mode.", "source": "sample fixture boundary"}
+    ]
+  },
+  "raw_data": {"fixture_version": 1, "intentionally_synthetic": true}
+}

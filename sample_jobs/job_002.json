@@ -1,0 +1,22 @@
+{
+  "source": "sample",
+  "source_job_id": "job_002",
+  "title": "Next.js operations dashboard for an AI workflow",
+  "description": "Implement a responsive Next.js and TypeScript dashboard for reviewing AI-generated job matches and proposal drafts. The interface needs filters, status badges, audit history, accessible components, and explicit approve or reject actions. No automated submission is required.",
+  "budget_type": "hourly",
+  "budget_min": 35,
+  "budget_max": 55,
+  "currency": "USD",
+  "required_skills": ["Next.js", "TypeScript", "Tailwind CSS", "Accessibility", "REST APIs"],
+  "posted_at": "2026-09-16T14:30:00Z",
+  "source_url": "https://example.invalid/jobs/job_002",
+  "client": {
+    "source_client_id": "client_002",
+    "name": "Sample Workflow Labs",
+    "facts": [
+      {"type": "FACT", "claim": "The fixture requires explicit human approval controls.", "source": "sample job description"},
+      {"type": "INFERENCE", "claim": "Accessibility likely matters across the review workflow.", "source": "required skills"}
+    ]
+  },
+  "raw_data": {"fixture_version": 1, "intentionally_synthetic": true}
+}
