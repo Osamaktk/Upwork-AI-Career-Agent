@@ -8,8 +8,13 @@ from app.core.security import decode_access_token
 from app.db.session import get_session
 from app.models.identity import User
 from app.repositories.users import UserRepository
+from app.services.ai_provider import AIProvider, build_ai_provider
 
 bearer_scheme = HTTPBearer(auto_error=False)
+
+
+def get_ai_provider(settings: Settings = Depends(get_settings)) -> AIProvider:
+    return build_ai_provider(settings)
 
 
 async def get_current_user(

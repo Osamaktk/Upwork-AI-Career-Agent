@@ -26,3 +26,16 @@ Set-Location frontend
 npm install
 npm run dev
 ```
+
+Open `http://localhost:3000`, register or sign in, then use the dashboard's development actions to seed the synthetic profile, import fixtures, and analyze/rank the jobs. The seed endpoint is rejected outside development/test environments.
+
+## Verification
+
+```powershell
+python -m pytest backend/tests -q
+python -m ruff check backend
+alembic -c backend/alembic.ini check
+Set-Location frontend
+npm run lint
+npm run build
+```

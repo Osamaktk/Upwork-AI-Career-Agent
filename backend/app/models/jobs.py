@@ -6,6 +6,7 @@ from sqlalchemy import JSON, DateTime, ForeignKey, Numeric, String, Text, Unique
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+from app.models.enums import AnalysisState, CompatibilityStatus, JobStatus
 
 
 class Client(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -55,6 +56,15 @@ class Job(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     source_url: Mapped[str | None] = mapped_column(String(2048))
     raw_data: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     normalized_data: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    status: Mapped[str] = mapped_column(
+        String(40), default=JobStatus.DISCOVERED.value, index=True
+    )
+    analysis_state: Mapped[str] = mapped_column(
+        String(40), default=AnalysisState.PENDING.value, index=True
+    )
+    compatibility_status: Mapped[str] = mapped_column(
+        String(40), default=CompatibilityStatus.PENDING.value, index=True
+    )
 
 
 class JobRequirement(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -74,7 +84,15 @@ class JobMatch(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     compatibility_score: Mapped[Decimal] = mapped_column(Numeric(5, 2))
     matching_skills: Mapped[list[str]] = mapped_column(JSON, default=list)
+    exact_matches: Mapped[list[str]] = mapped_column(JSON, default=list)
+    related_matches: Mapped[list[dict[str, str]]] = mapped_column(JSON, default=list)
     missing_skills: Mapped[list[str]] = mapped_column(JSON, default=list)
     portfolio_project_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    relevant_claim_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    concerns: Mapped[list[str]] = mapped_column(JSON, default=list)
     reasons: Mapped[list[str]] = mapped_column(JSON, default=list)
     recommended_next_action: Mapped[str | None] = mapped_column(Text)
+    explanation: Mapped[str] = mapped_column(Text)
+    model_used: Mapped[str | None] = mapped_column(String(120))
+    formula_version: Mapped[str] = mapped_column(String(40), default="v1")
+    analysis_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)

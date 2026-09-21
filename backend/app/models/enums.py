@@ -7,6 +7,36 @@ class VerificationStatus(StrEnum):
     EXPIRED = "EXPIRED"
 
 
+class ClaimCategory(StrEnum):
+    SKILL = "SKILL"
+    EXPERIENCE = "EXPERIENCE"
+    EDUCATION = "EDUCATION"
+    CERTIFICATION = "CERTIFICATION"
+    PROJECT = "PROJECT"
+    INTERNSHIP = "INTERNSHIP"
+    ACHIEVEMENT = "ACHIEVEMENT"
+    OTHER = "OTHER"
+
+
+class JobStatus(StrEnum):
+    DISCOVERED = "DISCOVERED"
+    ACTIVE = "ACTIVE"
+    ARCHIVED = "ARCHIVED"
+
+
+class AnalysisState(StrEnum):
+    PENDING = "PENDING"
+    ANALYZED = "ANALYZED"
+    NEEDS_REVIEW = "NEEDS_REVIEW"
+    FAILED = "FAILED"
+
+
+class CompatibilityStatus(StrEnum):
+    PENDING = "PENDING"
+    MATCHED = "MATCHED"
+    NEEDS_REVIEW = "NEEDS_REVIEW"
+
+
 class ReviewStatus(StrEnum):
     DRAFT = "DRAFT"
     NEEDS_REVIEW = "NEEDS_REVIEW"

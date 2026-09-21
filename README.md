@@ -4,17 +4,18 @@ A human-controlled freelancing workflow system. Development starts with local sa
 
 ## Current milestone
 
-Phase 1 provides:
+Phase 2 provides a complete local/sample-data matching workflow:
 
-- a FastAPI application with health and authentication endpoints;
-- SQLAlchemy models for the planned product data model;
-- an initial Alembic migration;
-- audit-ready user and workflow entities;
-- three local sample jobs for future engine phases;
-- a minimal Next.js dashboard shell;
-- automated API, authentication, schema, and sample-data tests.
+- authenticated profile, verified-claim, and portfolio management;
+- idempotent ingestion and database-backed querying of synthetic jobs;
+- structured job analysis with a disabled-by-default AI provider boundary;
+- deterministic, reproducible skill, evidence, and portfolio matching;
+- persisted compatibility results and ranked batch analysis;
+- live dashboard, jobs, job-detail, profile, and portfolio views;
+- a clearly synthetic, development-only seed dataset; and
+- backend, migration, lint, and production-build verification.
 
-The analyzer, matcher, proposal generator, and fact checker are intentionally scheduled for later tested phases. See [ARCHITECTURE.md](ARCHITECTURE.md) for the implementation sequence.
+Proposal generation, fact checking, CRM workflows, and any authorized Upwork adapter remain later phases. See [ARCHITECTURE.md](ARCHITECTURE.md) for the implementation sequence.
 
 ## Quick start
 
@@ -36,3 +37,5 @@ npm run dev
 ```
 
 Run backend tests with `python -m pytest backend/tests`.
+
+After registering or signing in through the dashboard, run these local workflow actions in order: **Seed synthetic profile**, **Import sample jobs**, then **Analyze and rank**. No step connects to Upwork.

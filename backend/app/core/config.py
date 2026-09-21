@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     ai_primary_model: str = "gpt-5.6-sol"
     ai_fast_model: str = "gpt-5.6-luna"
     ai_provider_mode: Literal["disabled", "openai"] = "disabled"
+    openai_api_key: str | None = None
     sample_jobs_dir: Path = Path("sample_jobs")
     log_level: str = "INFO"
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])

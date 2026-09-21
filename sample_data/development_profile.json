@@ -1,0 +1,115 @@
+{
+  "synthetic": true,
+  "warning": "Synthetic development data only. It is not evidence about the real user.",
+  "profile": {
+    "title": "Synthetic AI and Full-Stack Developer",
+    "overview": "Development-only profile for exercising matching and verification workflows.",
+    "location": null,
+    "years_experience": null,
+    "education": [],
+    "certifications": [],
+    "primary_skills": ["Python", "Machine Learning", "Computer Vision", "FastAPI"],
+    "secondary_skills": ["Flutter", "Firebase"],
+    "programming_languages": ["Python", "Dart"],
+    "frameworks": ["FastAPI", "Flutter"],
+    "tools": ["Git", "Firebase"],
+    "domains": ["AI/ML", "Computer Vision"],
+    "work_experience": [],
+    "internships": [
+      {
+        "role": "Machine Learning Intern",
+        "organization": "Synthetic Development Organization",
+        "description": "Synthetic record that must be replaced with user-verified evidence.",
+        "started_at": null,
+        "ended_at": null
+      }
+    ],
+    "achievements": []
+  },
+  "skills": [
+    {"name": "Python", "category": "PRIMARY", "verification_status": "VERIFIED"},
+    {"name": "Machine Learning", "category": "PRIMARY", "verification_status": "VERIFIED"},
+    {"name": "Computer Vision", "category": "PRIMARY", "verification_status": "VERIFIED"},
+    {"name": "FastAPI", "category": "FRAMEWORK", "verification_status": "VERIFIED"},
+    {"name": "Flutter", "category": "FRAMEWORK", "verification_status": "VERIFIED"},
+    {"name": "Firebase", "category": "TOOL", "verification_status": "VERIFIED"}
+  ],
+  "claims": [
+    {
+      "claim": "Python",
+      "category": "SKILL",
+      "source": "synthetic development fixture",
+      "notes": "Verified only inside the synthetic development dataset.",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "claim": "Completed a synthetic machine learning internship using Python.",
+      "category": "INTERNSHIP",
+      "source": "synthetic development fixture",
+      "notes": "Requires replacement with real evidence before production use.",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "claim": "Built a synthetic facial recognition attendance project with Python and computer vision.",
+      "category": "PROJECT",
+      "source": "synthetic development fixture",
+      "notes": "Development-only verified claim.",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "claim": "Built a synthetic SMS spam classification project using machine learning.",
+      "category": "PROJECT",
+      "source": "synthetic development fixture",
+      "notes": "Development-only verified claim.",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "claim": "Built a synthetic lecture notes AI project with FastAPI.",
+      "category": "PROJECT",
+      "source": "synthetic development fixture",
+      "notes": "Development-only verified claim.",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "projects": [
+    {
+      "title": "Synthetic Facial Recognition Attendance System",
+      "description": "Development-only computer-vision portfolio fixture.",
+      "problem": "Demonstrate image-based attendance matching.",
+      "solution": "Synthetic Python and computer-vision implementation.",
+      "result": "Synthetic result; no real-world performance is claimed.",
+      "technologies": ["Python", "Computer Vision", "OpenCV"],
+      "skills": ["Python", "Computer Vision"],
+      "assets": [],
+      "tags": ["synthetic", "computer-vision"],
+      "verification_status": "VERIFIED",
+      "verified_claim_texts": ["Built a synthetic facial recognition attendance project with Python and computer vision."]
+    },
+    {
+      "title": "Synthetic SMS Spam Classifier",
+      "description": "Development-only text-classification fixture.",
+      "problem": "Classify synthetic SMS messages.",
+      "solution": "Synthetic machine-learning pipeline.",
+      "result": "Synthetic result; no production accuracy is claimed.",
+      "technologies": ["Python", "Machine Learning"],
+      "skills": ["Machine Learning", "Text Classification"],
+      "assets": [],
+      "tags": ["synthetic", "nlp"],
+      "verification_status": "VERIFIED",
+      "verified_claim_texts": ["Built a synthetic SMS spam classification project using machine learning."]
+    },
+    {
+      "title": "Synthetic Lecture Notes AI",
+      "description": "Development-only notes-processing fixture.",
+      "problem": "Organize synthetic lecture notes.",
+      "solution": "Synthetic AI workflow exposed through FastAPI.",
+      "result": "Synthetic result for local matching tests.",
+      "technologies": ["Python", "FastAPI", "AI/ML"],
+      "skills": ["API Development", "Machine Learning"],
+      "assets": [],
+      "tags": ["synthetic", "education"],
+      "verification_status": "VERIFIED",
+      "verified_claim_texts": ["Built a synthetic lecture notes AI project with FastAPI."]
+    }
+  ]
+}
