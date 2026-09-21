@@ -1,7 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import auth, claims, dashboard, development, health, jobs, portfolio, profile
+from app.api.routes import (
+    auth,
+    claims,
+    clients,
+    dashboard,
+    development,
+    evaluations,
+    health,
+    jobs,
+    portfolio,
+    profile,
+)
 from app.core.config import get_settings
 
 
@@ -25,6 +36,8 @@ def create_app() -> FastAPI:
     application.include_router(claims.router, prefix=settings.api_v1_prefix)
     application.include_router(portfolio.router, prefix=settings.api_v1_prefix)
     application.include_router(jobs.router, prefix=settings.api_v1_prefix)
+    application.include_router(clients.router, prefix=settings.api_v1_prefix)
+    application.include_router(evaluations.router, prefix=settings.api_v1_prefix)
     application.include_router(dashboard.router, prefix=settings.api_v1_prefix)
     application.include_router(development.router, prefix=settings.api_v1_prefix)
     return application

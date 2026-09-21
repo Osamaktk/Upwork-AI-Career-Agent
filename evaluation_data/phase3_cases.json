@@ -1,0 +1,95 @@
+{
+  "cases": [
+    {
+      "id": "strong-fastapi",
+      "category": "strong_match",
+      "job_title": "FastAPI service",
+      "job_description": "Build a Python FastAPI service.",
+      "input_skills": ["Python", "FastAPI"],
+      "expected_skills": ["Python", "FastAPI"],
+      "projects": [
+        {
+          "title": "API Platform",
+          "technologies": ["Python", "FastAPI"],
+          "skills": ["API Development"],
+          "verified_claims": ["Built a verified API platform."]
+        },
+        {
+          "title": "Flutter App",
+          "technologies": ["Flutter"],
+          "skills": ["Mobile Development"],
+          "verified_claims": ["Built a verified mobile application."]
+        }
+      ],
+      "expected_projects": ["API Platform"]
+    },
+    {
+      "id": "weak-related",
+      "category": "weak_match",
+      "job_title": "OpenCV prototype",
+      "job_description": "Prototype an image-processing workflow.",
+      "input_skills": ["OpenCV"],
+      "expected_skills": ["OpenCV"],
+      "projects": [
+        {
+          "title": "Vision Prototype",
+          "technologies": ["Computer Vision"],
+          "skills": ["Image Processing"],
+          "verified_claims": ["Built a verified computer-vision prototype."]
+        }
+      ],
+      "expected_projects": ["Vision Prototype"]
+    },
+    {
+      "id": "unrelated",
+      "category": "unrelated_job",
+      "job_title": "Rust systems developer",
+      "job_description": "Implement a low-level Rust service.",
+      "input_skills": ["Rust"],
+      "expected_skills": ["Rust"],
+      "projects": [
+        {
+          "title": "Flutter App",
+          "technologies": ["Flutter", "Dart"],
+          "skills": ["Mobile Development"],
+          "verified_claims": ["Built a verified mobile application."]
+        }
+      ],
+      "expected_projects": []
+    },
+    {
+      "id": "ambiguous",
+      "category": "ambiguous_job",
+      "job_title": "AI workflow",
+      "job_description": "Help with an AI workflow; details require clarification.",
+      "input_skills": ["AI/ML"],
+      "expected_skills": ["AI/ML"],
+      "projects": [
+        {
+          "title": "ML Classifier",
+          "technologies": ["Machine Learning"],
+          "skills": ["AI/ML"],
+          "verified_claims": ["Built a verified machine-learning classifier."]
+        }
+      ],
+      "expected_projects": ["ML Classifier"]
+    },
+    {
+      "id": "missing-information",
+      "category": "missing_information",
+      "job_title": "Unspecified project",
+      "job_description": "Project details are not yet available.",
+      "input_skills": [],
+      "expected_skills": [],
+      "projects": [
+        {
+          "title": "API Platform",
+          "technologies": ["Python", "FastAPI"],
+          "skills": ["API Development"],
+          "verified_claims": ["Built a verified API platform."]
+        }
+      ],
+      "expected_projects": []
+    }
+  ]
+}

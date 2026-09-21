@@ -53,13 +53,25 @@ The version 1 score is reproducible: 75 points are allocated across required ski
 
 1. Foundation: architecture, schema, auth, health, audit primitives, tests. **Complete.**
 2. Verified profile, claims, portfolio, sample-job ingestion, job analysis, deterministic matching, and live workflow views. **Complete.**
-3. Client analysis and portfolio-selection refinement.
-4. Proposal generation.
-5. Claim-level fact checking.
-6. CRM and approval workflow.
-7. Message analysis.
-8. Analytics and scheduled reports.
-9. Authorized Upwork adapter, only after its permissions are documented and approved.
-10. Production hardening and evaluations.
+3. Client intelligence, sourced facts, evidence graph, portfolio selection, and evaluation baseline. **Complete.**
+4. Proposal generation and claim-level fact checking.
+5. Application CRM and communication intelligence.
+6. Scheduling, background tasks, and notifications.
+7. Analytics, feedback, model usage, and evaluation expansion.
+8. Authorized Upwork adapter, only after its permissions are documented and approved.
+9. Production hardening, deployment, security, and monitoring.
 
 Each phase must pass tests and update documentation before the next phase begins.
+
+## Phase 3 evidence boundary
+
+```text
+Sourced client record -> FACT | INFERENCE | UNKNOWN -> structured client analysis
+
+Job requirement -> verified skill -> verified claim -> optional verified portfolio project
+                                                       |
+                                                       v
+                                              proposal-ready evidence link
+```
+
+Only database-verified skills and claims can produce proposal-ready links. Portfolio relevance uses versioned deterministic weights: 70 points for exact/related requirement coverage and 30 points for verified project claims, with projects lacking requirement overlap excluded. AI may explain a ranking but cannot change its score or cite IDs outside the supplied evidence set.

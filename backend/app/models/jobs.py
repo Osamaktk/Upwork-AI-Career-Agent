@@ -2,11 +2,17 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import JSON, DateTime, ForeignKey, Numeric, String, Text, UniqueConstraint
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Numeric, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
-from app.models.enums import AnalysisState, CompatibilityStatus, JobStatus
+from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin, utc_now
+from app.models.enums import (
+    AnalysisState,
+    CompatibilityStatus,
+    FactClassification,
+    JobStatus,
+    VerificationStatus,
+)
 
 
 class Client(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -16,6 +22,8 @@ class Client(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
 
     name: Mapped[str | None] = mapped_column(String(240))
+    company: Mapped[str | None] = mapped_column(String(240))
+    website: Mapped[str | None] = mapped_column(String(2048))
     source: Mapped[str] = mapped_column(String(80), index=True)
     source_client_id: Mapped[str | None] = mapped_column(String(240))
     summary: Mapped[str | None] = mapped_column(Text)
@@ -32,6 +40,52 @@ class ClientSource(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     url: Mapped[str | None] = mapped_column(String(2048))
     facts: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
     collected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class ClientFact(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "client_facts"
+
+    client_id: Mapped[str] = mapped_column(
+        ForeignKey("clients.id", ondelete="CASCADE"), index=True
+    )
+    client_source_id: Mapped[str | None] = mapped_column(
+        ForeignKey("client_sources.id", ondelete="RESTRICT"), index=True
+    )
+    fact: Mapped[str] = mapped_column(Text)
+    fact_type: Mapped[str] = mapped_column(String(80), index=True)
+    classification: Mapped[str] = mapped_column(
+        String(24), default=FactClassification.UNKNOWN.value, index=True
+    )
+    verification_status: Mapped[str] = mapped_column(
+        String(24), default=VerificationStatus.UNVERIFIED.value, index=True
+    )
+    first_seen: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    last_seen: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
+class ClientAnalysis(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "client_analyses"
+    __table_args__ = (
+        UniqueConstraint("client_id", "job_id", name="uq_client_analyses_client_job"),
+    )
+
+    client_id: Mapped[str] = mapped_column(
+        ForeignKey("clients.id", ondelete="CASCADE"), index=True
+    )
+    job_id: Mapped[str] = mapped_column(ForeignKey("jobs.id", ondelete="CASCADE"), index=True)
+    verified_facts: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
+    inferences: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
+    unknowns: Mapped[list[str]] = mapped_column(JSON, default=list)
+    project_goals: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
+    requirements: Mapped[list[str]] = mapped_column(JSON, default=list)
+    concerns: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
+    questions: Mapped[list[str]] = mapped_column(JSON, default=list)
+    communication_style_indicators: Mapped[list[dict[str, Any]]] = mapped_column(
+        JSON, default=list
+    )
+    model_used: Mapped[str | None] = mapped_column(String(120))
+    prompt_version: Mapped[str] = mapped_column(String(40), default="client-analysis-v1")
+    analyzed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 
 
 class Job(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -96,3 +150,36 @@ class JobMatch(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     model_used: Mapped[str | None] = mapped_column(String(120))
     formula_version: Mapped[str] = mapped_column(String(40), default="v1")
     analysis_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+
+
+class EvidenceLink(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "evidence_links"
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "job_id",
+            "requirement_id",
+            "skill_id",
+            "claim_id",
+            "portfolio_project_id",
+            name="uq_evidence_links_chain",
+        ),
+    )
+
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    job_id: Mapped[str] = mapped_column(ForeignKey("jobs.id", ondelete="CASCADE"), index=True)
+    requirement_id: Mapped[str] = mapped_column(
+        ForeignKey("job_requirements.id", ondelete="CASCADE"), index=True
+    )
+    skill_id: Mapped[str] = mapped_column(ForeignKey("skills.id", ondelete="CASCADE"), index=True)
+    claim_id: Mapped[str] = mapped_column(
+        ForeignKey("verified_claims.id", ondelete="CASCADE"), index=True
+    )
+    portfolio_project_id: Mapped[str | None] = mapped_column(
+        ForeignKey("portfolio_projects.id", ondelete="CASCADE"), index=True
+    )
+    relationship: Mapped[str] = mapped_column(String(24), index=True)
+    explanation: Mapped[str] = mapped_column(Text)
+    proposal_ready: Mapped[bool] = mapped_column(Boolean, default=False, index=True)

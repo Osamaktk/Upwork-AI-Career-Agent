@@ -44,6 +44,27 @@ All endpoints below require a bearer token.
 - `POST /api/v1/jobs/{job_id}/analyze` - persist structured analysis.
 - `POST /api/v1/jobs/{job_id}/match` - calculate and persist a reproducible match.
 - `POST /api/v1/jobs/analyze/batch` - analyze, match, and rank stored jobs.
+- `POST /api/v1/jobs/{job_id}/portfolio-selection` - rank verified projects using deterministic relevance rules.
+- `GET /api/v1/jobs/{job_id}/portfolio-selection` - retrieve the persisted portfolio selection.
+- `POST /api/v1/jobs/{job_id}/evidence/rebuild` - rebuild verified requirement-to-evidence links.
+- `GET /api/v1/jobs/{job_id}/evidence` - retrieve the evidence graph and unsupported requirements.
+
+## Client intelligence
+
+- `POST /api/v1/clients` - create a source-scoped client record.
+- `GET /api/v1/clients` - list client records.
+- `GET /api/v1/clients/{client_id}` - retrieve client sources, facts, and analyses.
+- `PATCH /api/v1/clients/{client_id}` - update allowed client fields.
+- `POST /api/v1/clients/{client_id}/sources` - attach a permitted/public source.
+- `POST /api/v1/clients/{client_id}/facts` - add a validated FACT, INFERENCE, or UNKNOWN record.
+- `GET /api/v1/clients/{client_id}/facts` - list visibly classified facts with source metadata.
+- `POST /api/v1/clients/{client_id}/analyze?job_id=...` - persist structured client/job analysis.
+
+FACT records require a source and VERIFIED state. INFERENCE and UNKNOWN records cannot be marked VERIFIED. AI analysis rejects unsupported fact IDs and never writes classifications back to authoritative fact records.
+
+## Evaluations
+
+- `GET /api/v1/evaluations/phase3` - run the versioned local Phase 3 evaluation dataset and return extraction, portfolio-selection, unsupported-claim, and false-match metrics.
 
 ## Dashboard and development
 

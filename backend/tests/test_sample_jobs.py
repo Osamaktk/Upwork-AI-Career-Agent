@@ -16,6 +16,6 @@ def test_sample_jobs_are_valid_unique_and_explicitly_synthetic():
 def test_sample_clients_distinguish_fact_inference_and_unknown():
     directory = Path(__file__).resolve().parents[2] / "sample_jobs"
     jobs = load_sample_jobs(directory)
-    fact_types = {fact["type"] for job in jobs for fact in job.client.facts}
+    fact_types = {fact.type.value for job in jobs for fact in job.client.facts}
 
     assert fact_types == {"FACT", "INFERENCE", "UNKNOWN"}

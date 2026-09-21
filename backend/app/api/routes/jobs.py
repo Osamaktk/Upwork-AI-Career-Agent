@@ -6,11 +6,16 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agents.job_analyzer import JobAnalyzerAgent
+from app.agents.portfolio_matcher import (
+    PortfolioMatcherAgent,
+    UnsupportedPortfolioEvidenceError,
+)
 from app.api.dependencies import get_ai_provider, get_current_user
 from app.core.config import Settings, get_settings
 from app.db.session import get_session
 from app.models.enums import CompatibilityStatus, JobStatus
 from app.models.identity import User
+from app.schemas.evidence import EvidenceGraphRead, PortfolioSelectionRead
 from app.schemas.jobs import (
     BatchAnalysisResult,
     JobAnalysis,
@@ -24,6 +29,12 @@ from app.schemas.jobs import (
 from app.schemas.matching import JobMatchRead
 from app.services.ai_provider import AIProvider, AIProviderError
 from app.services.batch_analysis import BatchAnalysisService
+from app.services.evidence import (
+    EvidenceGraphService,
+    EvidenceJobNotFoundError,
+    EvidenceNotReadyError,
+    PortfolioSelectionService,
+)
 from app.services.jobs import DuplicateJobError, JobNotFoundError, JobService
 from app.services.matching import (
     MatchingService,
@@ -185,3 +196,71 @@ async def match_job(
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     except (TypeError, ValueError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.post("/{job_id}/portfolio-selection", response_model=PortfolioSelectionRead)
+async def select_portfolio(
+    job_id: str,
+    use_ai: bool = Query(default=False),
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+    settings: Settings = Depends(get_settings),
+    provider: AIProvider = Depends(get_ai_provider),
+) -> PortfolioSelectionRead:
+    agent = PortfolioMatcherAgent(
+        provider=provider,
+        model=settings.ai_primary_model,
+        use_ai=use_ai,
+    )
+    try:
+        return await PortfolioSelectionService(session).select(job_id, user.id, agent)
+    except EvidenceJobNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Job not found") from exc
+    except EvidenceNotReadyError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except UnsupportedPortfolioEvidenceError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except AIProviderError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.get("/{job_id}/portfolio-selection", response_model=PortfolioSelectionRead)
+async def get_portfolio_selection(
+    job_id: str,
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> PortfolioSelectionRead:
+    try:
+        return await PortfolioSelectionService(session).get(job_id, user.id)
+    except EvidenceJobNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Job not found") from exc
+    except EvidenceNotReadyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@router.post("/{job_id}/evidence/rebuild", response_model=EvidenceGraphRead)
+async def rebuild_evidence_graph(
+    job_id: str,
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> EvidenceGraphRead:
+    try:
+        return await EvidenceGraphService(session).rebuild(job_id, user.id)
+    except EvidenceJobNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Job not found") from exc
+    except EvidenceNotReadyError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@router.get("/{job_id}/evidence", response_model=EvidenceGraphRead)
+async def get_evidence_graph(
+    job_id: str,
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> EvidenceGraphRead:
+    try:
+        return await EvidenceGraphService(session).get(job_id, user.id)
+    except EvidenceJobNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Job not found") from exc

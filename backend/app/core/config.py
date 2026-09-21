@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     ai_provider_mode: Literal["disabled", "openai"] = "disabled"
     openai_api_key: str | None = None
     sample_jobs_dir: Path = Path("sample_jobs")
+    phase3_evaluation_file: Path = Path("evaluation_data/phase3_cases.json")
     log_level: str = "INFO"
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
 

@@ -4,18 +4,22 @@ A human-controlled freelancing workflow system. Development starts with local sa
 
 ## Current milestone
 
-Phase 2 provides a complete local/sample-data matching workflow:
+Phase 3 provides a complete local/sample-data intelligence and evidence workflow:
 
 - authenticated profile, verified-claim, and portfolio management;
 - idempotent ingestion and database-backed querying of synthetic jobs;
 - structured job analysis with a disabled-by-default AI provider boundary;
 - deterministic, reproducible skill, evidence, and portfolio matching;
 - persisted compatibility results and ranked batch analysis;
-- live dashboard, jobs, job-detail, profile, and portfolio views;
+- source-linked client facts with explicit fact, inference, and unknown classifications;
+- structured client analysis without sensitive-trait speculation or invented information;
+- deterministic portfolio selection and proposal-ready evidence chains;
+- a versioned five-category evaluation dataset and measurable baseline;
+- live dashboard, jobs, client, profile, and portfolio views;
 - a clearly synthetic, development-only seed dataset; and
 - backend, migration, lint, and production-build verification.
 
-Proposal generation, fact checking, CRM workflows, and any authorized Upwork adapter remain later phases. See [ARCHITECTURE.md](ARCHITECTURE.md) for the implementation sequence.
+Proposal generation, proposal fact checking, CRM workflows, and any authorized Upwork adapter remain later phases. See [ARCHITECTURE.md](ARCHITECTURE.md) for the implementation sequence.
 
 ## Quick start
 

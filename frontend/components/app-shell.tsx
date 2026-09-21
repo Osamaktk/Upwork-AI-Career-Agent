@@ -8,6 +8,7 @@ import {useSession} from "./session-provider";
 const navigation = [
   ["Dashboard", "/"],
   ["Jobs", "/jobs"],
+  ["Clients", "/clients"],
   ["Profile", "/profile"],
   ["Portfolio", "/portfolio"],
 ];

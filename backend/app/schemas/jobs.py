@@ -4,14 +4,21 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
 
-from app.models.enums import AnalysisState, CompatibilityStatus, JobStatus
+from app.models.enums import AnalysisState, CompatibilityStatus, FactClassification, JobStatus
 from app.schemas.matching import JobMatchRead
+
+
+class SampleClientFact(BaseModel):
+    type: FactClassification
+    claim: str = Field(min_length=1, max_length=8000)
+    source: str = Field(min_length=1, max_length=240)
+    fact_type: str = Field(default="GENERAL", min_length=1, max_length=80)
 
 
 class SampleClient(BaseModel):
     source_client_id: str = Field(min_length=1, max_length=240)
     name: str | None = Field(default=None, max_length=240)
-    facts: list[dict[str, Any]] = Field(default_factory=list, max_length=100)
+    facts: list[SampleClientFact] = Field(default_factory=list, max_length=100)
 
 
 class JobFields(BaseModel):

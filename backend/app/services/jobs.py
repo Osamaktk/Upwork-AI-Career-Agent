@@ -6,8 +6,14 @@ from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agents.job_analyzer import JobAnalyzerAgent
-from app.models.enums import AnalysisState, CompatibilityStatus
-from app.models.jobs import Client, Job, JobMatch, JobRequirement
+from app.models.enums import (
+    AnalysisState,
+    CompatibilityStatus,
+    FactClassification,
+    VerificationStatus,
+)
+from app.models.jobs import Client, ClientFact, ClientSource, Job, JobMatch, JobRequirement
+from app.repositories.clients import ClientRepository
 from app.repositories.jobs import JobRepository
 from app.schemas.jobs import (
     ImportErrorDetail,
@@ -34,6 +40,7 @@ class JobService:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
         self.repository = JobRepository(session)
+        self.clients = ClientRepository(session)
 
     async def import_samples(self, directory: Path) -> SampleImportResult:
         response = SampleImportResult()
@@ -48,11 +55,7 @@ class JobService:
                 )
                 continue
             identity = (payload.source, payload.source_job_id)
-            if identity in seen or await self.repository.get_by_source_id(*identity):
-                response.skipped_count += 1
-                response.duplicate_count += 1
-                continue
-            seen.add(identity)
+            existing_job = await self.repository.get_by_source_id(*identity)
             client = await self.repository.get_client(
                 payload.source, payload.client.source_client_id
             )
@@ -61,13 +64,25 @@ class JobService:
                     source=payload.source,
                     source_client_id=payload.client.source_client_id,
                     name=payload.client.name,
-                    raw_data={"facts": payload.client.facts},
+                    raw_data={
+                        "facts": [
+                            item.model_dump(mode="json") for item in payload.client.facts
+                        ]
+                    },
                 )
                 self.session.add(client)
                 await self.session.flush()
             else:
                 client.name = payload.client.name
-                client.raw_data = {"facts": payload.client.facts}
+                client.raw_data = {
+                    "facts": [item.model_dump(mode="json") for item in payload.client.facts]
+                }
+            await self._sync_sample_client_facts(client, payload)
+            if identity in seen or existing_job:
+                response.skipped_count += 1
+                response.duplicate_count += 1
+                continue
+            seen.add(identity)
             job_values = payload.model_dump(exclude={"client"}, mode="python")
             job_values["source_url"] = (
                 str(payload.source_url) if payload.source_url is not None else None
@@ -78,6 +93,40 @@ class JobService:
             response.imported_count += 1
         await self.session.commit()
         return response
+
+    async def _sync_sample_client_facts(self, client: Client, payload: SampleJob) -> None:
+        source_url = str(payload.source_url) if payload.source_url else None
+        for item in payload.client.facts:
+            source = await self.clients.find_source(client.id, item.source, source_url)
+            if source is None:
+                source = ClientSource(
+                    client_id=client.id,
+                    source_type=item.source,
+                    url=source_url,
+                    facts=[],
+                    collected_at=payload.posted_at,
+                )
+                self.session.add(source)
+                await self.session.flush()
+            if await self.clients.find_fact(client.id, item.claim):
+                continue
+            classification = item.type.value
+            self.session.add(
+                ClientFact(
+                    client_id=client.id,
+                    client_source_id=source.id,
+                    fact=item.claim,
+                    fact_type=item.fact_type,
+                    classification=classification,
+                    verification_status=(
+                        VerificationStatus.VERIFIED.value
+                        if item.type == FactClassification.FACT
+                        else VerificationStatus.UNVERIFIED.value
+                    ),
+                    first_seen=payload.posted_at,
+                    last_seen=payload.posted_at,
+                )
+            )
 
     async def create(self, payload: JobCreate) -> Job:
         if await self.repository.get_by_source_id(payload.source, payload.source_job_id):

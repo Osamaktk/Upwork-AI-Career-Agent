@@ -9,6 +9,7 @@ export type DashboardSummary = {
 
 export type Job = {
   id: string;
+  client_id: string | null;
   title: string;
   description: string;
   budget_type: string | null;
@@ -90,4 +91,88 @@ export type PortfolioProject = {
   tags: string[];
   verification_status: string;
   verified_claim_ids: string[];
+};
+
+export type Client = {
+  id: string;
+  source: string;
+  source_client_id: string | null;
+  name: string | null;
+  company: string | null;
+  website: string | null;
+  summary: string | null;
+};
+
+export type ClientSource = {
+  id: string;
+  source_type: string;
+  url: string | null;
+  collected_at: string | null;
+};
+
+export type ClientFact = {
+  id: string;
+  fact: string;
+  fact_type: string;
+  classification: "FACT" | "INFERENCE" | "UNKNOWN";
+  verification_status: string;
+  source_type: string | null;
+  source_url: string | null;
+};
+
+export type AnalysisStatement = {
+  text: string;
+  supporting_fact_ids: string[];
+};
+
+export type ClientAnalysis = {
+  id: string;
+  job_id: string;
+  verified_facts: {id: string; fact: string; fact_type: string; source_url: string | null}[];
+  inferences: AnalysisStatement[];
+  unknowns: string[];
+  project_goals: AnalysisStatement[];
+  requirements: string[];
+  concerns: AnalysisStatement[];
+  questions: string[];
+  communication_style_indicators: AnalysisStatement[];
+};
+
+export type ClientDetail = Client & {
+  sources: ClientSource[];
+  facts: ClientFact[];
+  analyses: ClientAnalysis[];
+};
+
+export type RankedPortfolioProject = {
+  project_id: string;
+  title: string;
+  relevance_score: string;
+  exact_matches: string[];
+  related_matches: {required_skill: string; evidence: string}[];
+  verified_claim_ids: string[];
+  explanation: string;
+};
+
+export type PortfolioSelection = {
+  id: string;
+  ranked_projects: RankedPortfolioProject[];
+  formula_version: string;
+  model_used: string | null;
+};
+
+export type EvidenceGraph = {
+  job_id: string;
+  links: {
+    id: string;
+    requirement: string;
+    skill: string;
+    claim: string;
+    portfolio_project: string | null;
+    relationship: string;
+    explanation: string;
+    proposal_ready: boolean;
+  }[];
+  unsupported_requirements: string[];
+  proposal_ready_link_count: number;
 };

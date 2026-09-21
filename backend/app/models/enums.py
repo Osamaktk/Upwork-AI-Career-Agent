@@ -37,6 +37,17 @@ class CompatibilityStatus(StrEnum):
     NEEDS_REVIEW = "NEEDS_REVIEW"
 
 
+class FactClassification(StrEnum):
+    FACT = "FACT"
+    INFERENCE = "INFERENCE"
+    UNKNOWN = "UNKNOWN"
+
+
+class EvidenceRelationship(StrEnum):
+    EXACT = "EXACT"
+    RELATED = "RELATED"
+
+
 class ReviewStatus(StrEnum):
     DRAFT = "DRAFT"
     NEEDS_REVIEW = "NEEDS_REVIEW"
